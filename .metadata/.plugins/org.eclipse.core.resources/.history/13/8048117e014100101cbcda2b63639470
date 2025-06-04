@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: api-gateway
+  
+  cloud:
+    gateway:
+      routes:
+        - id: service1
+          uri: lb://service-1
+          predicates:
+            - Path=/service-1/**
+          filters:
+            - RewritePath=/service1/(?<segment>.*), /api/${segment}
+
+    consul:
+      discovery:
+        enabled: true
+        register: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+      locator:
+        enabled: true
+
+server:
+  port: 9090
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

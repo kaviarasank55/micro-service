@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: api-gateway
+  
+  cloud:
+    gateway:
+      routes:
+        - id: service1
+          uri: lb://service2
+          predicates:
+            - Path=/api/hello
+          #use http://localhost:8080 and spring cloud starter gateway
+					#dependecnies for the gatway config and the it is deprecated try to use with other dependecy
+
+    consul:
+      discovery:
+        enabled: true
+        register: true
+        health-check-path: /actuator/health
+        health-check-interval: 10s
+      locator:
+        enabled: true
+
+server:
+  port: 9090
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
